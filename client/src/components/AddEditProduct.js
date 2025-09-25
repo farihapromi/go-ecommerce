@@ -6,7 +6,7 @@
 //     title: '',
 //     description: '',
 //     price: '',
-//     imageUrl: '',
+//     imgUrl: '',
 //   });
 
 //   useEffect(() => {
@@ -15,7 +15,7 @@
 //         title: product.title,
 //         description: product.description,
 //         price: product.price,
-//         imageUrl: product.imageUrl,
+//         imgUrl: product.imgUrl,
 //       });
 //     }
 //   }, [product]);
@@ -67,8 +67,8 @@
 //           Image URL:
 //           <input
 //             type="text"
-//             name="imageUrl"
-//             value={formData.imageUrl}
+//             name="imgUrl"
+//             value={formData.imgUrl}
 //             onChange={handleChange}
 //           />
 //         </label>
@@ -93,7 +93,7 @@ function AddEditProduct({ product, onSave, onCancel }) {
     title: '',
     description: '',
     price: '',
-    imageUrl: '',
+    imgUrl: '',
   });
 
   useEffect(() => {
@@ -102,7 +102,7 @@ function AddEditProduct({ product, onSave, onCancel }) {
         title: product.title,
         description: product.description,
         price: product.price,
-        imageUrl: product.imageUrl,
+        imgUrl: product.imgUrl,
       });
     }
   }, [product]);
@@ -112,6 +112,7 @@ function AddEditProduct({ product, onSave, onCancel }) {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+      [name]: name === 'price' ? parseFloat(value) || 0 : value, // ✅ convert
     }));
   };
 
@@ -122,19 +123,19 @@ function AddEditProduct({ product, onSave, onCancel }) {
       title: '',
       description: '',
       price: '',
-      imageUrl: '',
+      imgUrl: '',
     });
   };
 
   return (
-    <div className="add-edit-product">
+    <div className='add-edit-product'>
       <h2>{product ? 'Edit Product' : 'Add Product'}</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Title:
           <input
-            type="text"
-            name="title"
+            type='text'
+            name='title'
             value={formData.title}
             onChange={handleChange}
           />
@@ -142,7 +143,7 @@ function AddEditProduct({ product, onSave, onCancel }) {
         <label>
           Description:
           <textarea
-            name="description"
+            name='description'
             value={formData.description}
             onChange={handleChange}
           />
@@ -150,8 +151,8 @@ function AddEditProduct({ product, onSave, onCancel }) {
         <label>
           Price:
           <input
-            type="number"
-            name="price"
+            type='number'
+            name='price'
             value={formData.price}
             onChange={handleChange}
           />
@@ -159,15 +160,17 @@ function AddEditProduct({ product, onSave, onCancel }) {
         <label>
           Image URL:
           <input
-            type="text"
-            name="imageUrl"
-            value={formData.imageUrl}
+            type='text'
+            name='imgUrl'
+            value={formData.imgUrl}
             onChange={handleChange}
           />
         </label>
-        <div className="buttons">
-          <button type="submit">{product ? 'Save Changes' : 'Add Product'}</button>
-          <button type="button" onClick={onCancel}>
+        <div className='buttons'>
+          <button type='submit'>
+            {product ? 'Save Changes' : 'Add Product'}
+          </button>
+          <button type='button' onClick={onCancel}>
             Cancel
           </button>
         </div>
