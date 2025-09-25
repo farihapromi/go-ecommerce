@@ -35,7 +35,7 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 	encoder.Encode(productList)
 
 }
-func createProducts(w http.ResponseWriter, r *http.Request) {
+func createProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
 	w.Header().Set("Content-Type", "application/json")
 
@@ -59,6 +59,9 @@ func createProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	newProduct.ID = len(productList) + 1
+	productList = append(productList, newProduct)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(newProduct)
 
 }
 func main() {
@@ -67,8 +70,9 @@ func main() {
 	mux.HandleFunc("/hello", helloHandler) //route
 	mux.HandleFunc("/about", aboutHandler) //route
 	mux.HandleFunc("/products", getProducts)
-	fmt.Println("Server running on :3000")
-	err := http.ListenAndServe(":3000", mux)
+	mux.HandleFunc("/create-products", createProduct)
+	fmt.Println("Server running on :8080")
+	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
 		fmt.Println("Error starting the server", err)
 	}
