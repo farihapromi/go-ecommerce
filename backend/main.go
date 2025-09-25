@@ -20,12 +20,14 @@ type Product struct {
 	Title       string  `json:"title"`
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
-	Imgurl      string  `json:"imgUrl"`
+	Imgurl      string  `json:"imageUrl"`
 }
 
 var productList []Product
 
 func getProducts(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
 	if r.Method != "GET" {
 		http.Error(w, "Plz give me GET request", 400)
 		return
@@ -37,7 +39,15 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 }
 func createProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
+	w.Header().Set("Access-Control-Allow-Methods", "POST")
+
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	w.Header().Set("Content-Type", "application/json")
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(200)
+		return
+	}
 
 	if r.Method != "POST" {
 		http.Error(w, "Plz give me GET request", 400)
@@ -60,6 +70,7 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	}
 	newProduct.ID = len(productList) + 1
 	productList = append(productList, newProduct)
+	w.WriteHeader(201)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(newProduct)
 
