@@ -51,7 +51,14 @@ func createProducts(w http.ResponseWriter, r *http.Request) {
 		3.append the instsance into productList
 	*/
 	var newProduct Product
-	json.NewDecoder()
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&newProduct)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "plz give me a valid json", 400)
+		return
+	}
+	newProduct.ID = len(productList) + 1
 
 }
 func main() {

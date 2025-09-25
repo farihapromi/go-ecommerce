@@ -49,7 +49,7 @@ Welcome to the Product Listing React App! This is a full-stack web application b
    npm start
    ```
 
-   The backend server will run on http://localhost:5000.
+   The backend server will run on http://localhost:8080.
 
 2. **Start the React App:**
 
