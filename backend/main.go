@@ -34,8 +34,9 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	encoder := json.NewEncoder(w)
-	encoder.Encode(productList)
+	// encoder := json.NewEncoder(w)
+	// encoder.Encode(productList)
+	sendData(w, productList, 200)
 
 }
 func createProduct(w http.ResponseWriter, r *http.Request) {
@@ -63,14 +64,15 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	}
 	newProduct.ID = len(productList) + 1
 	productList = append(productList, newProduct)
-	w.WriteHeader(201)
-	encoder := json.NewEncoder(w)
-	encoder.Encode(newProduct)
+	sendData(w, newProduct, 201)
+	// w.WriteHeader(201)
+	// encoder := json.NewEncoder(w)
+	// encoder.Encode(newProduct)
 
 }
 func handleCors(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
+	w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
 
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Promi")
 
@@ -82,6 +84,11 @@ func handlePreflightReq(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
+	w.WriteHeader(statusCode)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(data)
 }
 func main() {
 	mux := http.NewServeMux() //router
