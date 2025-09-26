@@ -26,8 +26,9 @@ type Product struct {
 var productList []Product
 
 func getProducts(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
+
+	handleCors(w)
+	handlePreflightReq(w, r)
 	if r.Method != "GET" {
 		http.Error(w, "Plz give me GET request", 400)
 		return
@@ -38,16 +39,8 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 
 }
 func createProduct(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-	w.Header().Set("Content-Type", "application/json")
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(200)
-		return
-	}
+	handleCors(w)
+	handlePreflightReq(w, r)
 
 	if r.Method != "POST" {
 		http.Error(w, "Plz give me GET request", 400)
@@ -73,6 +66,21 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(201)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(newProduct)
+
+}
+func handleCors(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
+	w.Header().Set("Access-Control-Allow-Methods", "POST")
+
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Promi")
+
+	w.Header().Set("Content-Type", "application/json")
+}
+func handlePreflightReq(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(200)
+		return
+	}
 
 }
 func main() {
