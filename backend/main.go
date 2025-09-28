@@ -93,9 +93,9 @@ func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
 func main() {
 	mux := http.NewServeMux() //router
 
-	mux.HandleFunc("/hello", helloHandler) //route
-	mux.HandleFunc("/about", aboutHandler) //route
-	mux.HandleFunc("/products", getProducts)
+	mux.Handle("GET /hello", http.HandlerFunc(helloHandler)) //route
+	mux.Handle("GET /about", http.HandlerFunc(aboutHandler)) //route
+	mux.Handle("GET /products", http.HandlerFunc(getProducts))
 	mux.HandleFunc("/create-products", createProduct)
 	fmt.Println("Server running on :8080")
 	err := http.ListenAndServe(":8080", mux)
