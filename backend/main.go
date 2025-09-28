@@ -29,11 +29,15 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 
 	handleCors(w)
 	handlePreflightReq(w, r)
+	//for uisng HandlerFunc we dont have to check if it is not get
+	// if r.Method != "GET" {
+	// 	http.Error(w, "Plz give me GET request", 400)
+	// 	return
 	if r.Method != "GET" {
-		http.Error(w, "Plz give me GET request", 400)
 		return
-
 	}
+
+	// }
 	// encoder := json.NewEncoder(w)
 	// encoder.Encode(productList)
 	sendData(w, productList, 200)
@@ -43,11 +47,11 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	handleCors(w)
 	handlePreflightReq(w, r)
 
-	if r.Method != "POST" {
-		http.Error(w, "Plz give me GET request", 400)
-		return
+	// if r.Method != "POST" {
+	// 	http.Error(w, "Plz give me GET request", 400)
+	// 	return
 
-	}
+	// }
 	// r.body=>title,description,imageUrl,price=>Product er ekta instance=>ProdcutList=>append
 	/*
 		1.Take body informarion form r.body
@@ -96,7 +100,9 @@ func main() {
 	mux.Handle("GET /hello", http.HandlerFunc(helloHandler)) //route
 	mux.Handle("GET /about", http.HandlerFunc(aboutHandler)) //route
 	mux.Handle("GET /products", http.HandlerFunc(getProducts))
-	mux.HandleFunc("/create-products", createProduct)
+	mux.Handle("OPTIONS /products", http.HandlerFunc(getProducts))
+	mux.Handle("POST /create-products", http.HandlerFunc(createProduct))
+	mux.Handle("OPTIONS /create-products", http.HandlerFunc(createProduct))
 	fmt.Println("Server running on :8080")
 	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
