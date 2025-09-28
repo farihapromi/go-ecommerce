@@ -28,15 +28,15 @@ var productList []Product
 func getProducts(w http.ResponseWriter, r *http.Request) {
 
 	handleCors(w)
-	handlePreflightReq(w, r)
+	// handlePreflightReq(w, r)
 	//for uisng HandlerFunc we dont have to check if it is not get
 	// if r.Method != "GET" {
 	// 	http.Error(w, "Plz give me GET request", 400)
 	// 	return
-	if r.Method != "GET" {
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(200)
 		return
 	}
-
 	// }
 	// encoder := json.NewEncoder(w)
 	// encoder.Encode(productList)
@@ -45,11 +45,15 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 }
 func createProduct(w http.ResponseWriter, r *http.Request) {
 	handleCors(w)
-	handlePreflightReq(w, r)
+	// handlePreflightReq(w, r)
 
 	// if r.Method != "POST" {
 	// 	http.Error(w, "Plz give me GET request", 400)
 	// 	return
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(201)
+		return
+	}
 
 	// }
 	// r.body=>title,description,imageUrl,price=>Product er ekta instance=>ProdcutList=>append
@@ -99,7 +103,11 @@ func main() {
 
 	mux.Handle("GET /hello", http.HandlerFunc(helloHandler)) //route
 	mux.Handle("GET /about", http.HandlerFunc(aboutHandler)) //route
-	mux.Handle("GET /products", http.HandlerFunc(getProducts))
+	// mux.Handle("GET /products", http.HandlerFunc(getProducts))
+	handler := http.HandlerFunc(getProducts)
+	updatedHandler := corsMiddleware((handler))
+	mux.Handle("GET /products", updatedHandler)
+
 	mux.Handle("OPTIONS /products", http.HandlerFunc(getProducts))
 	mux.Handle("POST /create-products", http.HandlerFunc(createProduct))
 	mux.Handle("OPTIONS /create-products", http.HandlerFunc(createProduct))
@@ -161,3 +169,30 @@ func init() {
 
 	// fmt.Println(productList)
 }
+func corsMiddleware(next http.Handler) http.Handler {
+	handleCors := func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
+		w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
+
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Promi")
+
+		w.Header().Set("Content-Type", "application/json")
+		next.ServeHTTP(w, r) //getProducts()
+
+	}
+	handler := http.HandlerFunc(handleCors)
+	return handler
+
+}
+
+/*
+func handleCors(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
+	w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
+
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Promi")
+
+	w.Header().Set("Content-Type", "application/json")
+}
+
+*/
