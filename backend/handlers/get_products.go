@@ -1,6 +1,10 @@
-package main
+package handlers
 
-import "net/http"
+import (
+	"ecommerce/product"
+	"ecommerce/util"
+	"net/http"
+)
 
 func getProducts(w http.ResponseWriter, r *http.Request) {
 
@@ -17,6 +21,6 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 	// }
 	// encoder := json.NewEncoder(w)
 	// encoder.Encode(productList)
-	sendData(w, productList, 200)
+	util.SendData(w, product.ProductList, 200)
 
 }

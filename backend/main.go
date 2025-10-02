@@ -14,8 +14,8 @@ func main() {
 	fmt.Println("Server running on :8080")
 
 	// Use cors-enabled globalRouter
-	handler := globalRouter(mux)
-	err := http.ListenAndServe(":8080", handler)
+	globalRouter := globalRouter(mux)
+	err := http.ListenAndServe(":8080", globalRouter)
 	if err != nil {
 		fmt.Println("Error starting the server", err)
 	}

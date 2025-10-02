@@ -1,4 +1,4 @@
-package main
+package product
 
 type Product struct {
 	/*Struct tags are special metadata you can attach to struct fields.
