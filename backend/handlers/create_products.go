@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func createProduct(w http.ResponseWriter, r *http.Request) {
+func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	// handleCors(w)
 	// handlePreflightReq(w, r)
 

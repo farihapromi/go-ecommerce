@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func getProducts(w http.ResponseWriter, r *http.Request) {
+func GetProducts(w http.ResponseWriter, r *http.Request) {
 
 	// handleCors(w)
 	// handlePreflightReq(w, r)
