@@ -1,110 +1,15 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello World")
-}
-func aboutHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "i am promi, I am a SW Engineer")
-}
-
-type Product struct {
-	/*Struct tags are special metadata you can attach to struct fields.
-	They are written in backticks (`...`) after the field definition.*/
-	ID          int     `json:"id"`
-	Title       string  `json:"title"`
-	Description string  `json:"description"`
-	Price       float64 `json:"price"`
-	ImgUrl      string  `json:"imgUrl"`
-}
-
-var productList []Product
-
-func getProducts(w http.ResponseWriter, r *http.Request) {
-
-	// handleCors(w)
-	// handlePreflightReq(w, r)
-	//for uisng HandlerFunc we dont have to check if it is not get
-	// if r.Method != "GET" {
-	// 	http.Error(w, "Plz give me GET request", 400)
-	// 	return
-	// if r.Method == "OPTIONS" {
-	// 	w.WriteHeader(200)
-	// 	return
-	// }
-	// }
-	// encoder := json.NewEncoder(w)
-	// encoder.Encode(productList)
-	sendData(w, productList, 200)
-
-}
-func createProduct(w http.ResponseWriter, r *http.Request) {
-	// handleCors(w)
-	// handlePreflightReq(w, r)
-
-	// if r.Method != "POST" {
-	// 	http.Error(w, "Plz give me GET request", 400)
-	// 	return
-	// if r.Method == "OPTIONS" {
-	// 	w.WriteHeader(201)
-	// 	return
-	// }
-
-	// }
-	// r.body=>title,description,imageUrl,price=>Product er ekta instance=>ProdcutList=>append
-	/*
-		1.Take body informarion form r.body
-		2.Create an instance using Product struct with the body information
-		3.append the instsance into productList
-	*/
-	var newProduct Product
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&newProduct)
-	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "plz give me a valid json", 400)
-		return
-	}
-	newProduct.ID = len(productList) + 1
-	productList = append(productList, newProduct)
-	sendData(w, newProduct, 201)
-	// w.WriteHeader(201)
-	// encoder := json.NewEncoder(w)
-	// encoder.Encode(newProduct)
-
-}
-func handleCors(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
-	w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
-
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Promi")
-
-	w.Header().Set("Content-Type", "application/json")
-}
-func handlePreflightReq(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(200)
-		return
-	}
-
-}
-func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
-	w.WriteHeader(statusCode)
-	encoder := json.NewEncoder(w)
-	encoder.Encode(data)
-}
 func main() {
 	mux := http.NewServeMux()
 
-	mux.Handle("GET /hello", http.HandlerFunc(helloHandler))
-	mux.Handle("GET /about", http.HandlerFunc(aboutHandler))
-	mux.Handle("GET /products", corsMiddleware(http.HandlerFunc(getProducts)))
-	mux.Handle("POST /create-products", corsMiddleware(http.HandlerFunc(createProduct)))
+	mux.Handle("GET /products", http.HandlerFunc(getProducts))
+	mux.Handle("POST /create-products", http.HandlerFunc(createProduct))
 
 	fmt.Println("Server running on :8080")
 
@@ -167,50 +72,3 @@ func init() {
 
 	// fmt.Println(productList)
 }
-func corsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Promi")
-		w.Header().Set("Content-Type", "application/json")
-
-		// Handle preflight request
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
-}
-
-func globalRouter(mux *http.ServeMux) http.Handler {
-	handleAllReq := func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "OPTIONS" {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
-
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Promi")
-
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(200)
-
-		} else {
-			mux.ServeHTTP(w, r)
-		}
-
-	}
-	return http.HandlerFunc(handleAllReq)
-}
-
-/*
-func handleCors(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*") //ALLOW  everyone.if we write 3000 isntead of * it wil suport 3000 port frontend
-	w.Header().Set("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS")
-
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,Promi")
-
-	w.Header().Set("Content-Type", "application/json")
-}
-
-*/
