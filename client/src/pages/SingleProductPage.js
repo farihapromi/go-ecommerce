@@ -13,9 +13,7 @@ function SingleProductPage() {
 
   const fetchProduct = async (id) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/products/${id}`
-      ); // Adjust the API endpoint
+      const response = await axios.get(`http://localhost:8080/products/${id}`); // Adjust the API endpoint
       setProduct(response.data);
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -29,7 +27,7 @@ function SingleProductPage() {
   return (
     <div className='single-product-page'>
       <div className='product-image'>
-        <img src={product.imgUrl} alt={product.title} />
+        <img src={product.imageUrl} alt={product.title} />
       </div>
       <div className='product-details'>
         <h2>{product.title}</h2>
