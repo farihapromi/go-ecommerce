@@ -5,19 +5,15 @@ import (
 	"ecommerce/handlers"
 	"ecommerce/middleware"
 	"fmt"
-	"log"
+
 	"net/http"
 )
 
 func Serve() {
 	mux := http.NewServeMux()
+	handler := http.HandlerFunc(handlers.Test)
 
-	cntrl := func(w http.ResponseWriter, r *http.Request) {
-		log.Println("ami handler:middle a print hobo")
-	}
-	handler := http.HandlerFunc(cntrl)
-	loggerMiddlerware := middleware.Logger(handler)
-	mux.Handle("GET route", loggerMiddlerware)
+	mux.Handle("GET / route", middleware.Logger(handler))
 
 	mux.Handle("GET /products", http.HandlerFunc(handlers.GetProducts))
 	mux.Handle("POST /products", http.HandlerFunc(handlers.CreateProduct))
