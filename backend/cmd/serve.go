@@ -13,13 +13,15 @@ func Serve() {
 	mux := http.NewServeMux()
 	manager := middleware.NewManager()
 
-	mux.Handle("GET /rahim", manager.With(middleware.Logger)(http.HandlerFunc(handlers.Test)))
+	mux.Handle("GET /rahim", manager.With(http.HandlerFunc(handlers.Test),
+		middleware.Logger))
 
-	mux.Handle("GET / route", middleware.Logger(http.HandlerFunc(handlers.Test)))
+	mux.Handle("GET / route", manager.With(http.HandlerFunc(handlers.Test),
+		middleware.Logger))
 
-	mux.Handle("GET /products", middleware.Logger(http.HandlerFunc(handlers.GetProducts)))
-	mux.Handle("POST /products", middleware.Logger(http.HandlerFunc(handlers.CreateProduct)))
-	mux.Handle("GET /products/{productId}", middleware.Logger(http.HandlerFunc(handlers.GetProductByID)))
+	mux.Handle("GET /products", manager.With(http.HandlerFunc(handlers.GetProducts), middleware.Logger))
+	mux.Handle("POST /products", manager.With(http.HandlerFunc(handlers.CreateProduct), middleware.Logger))
+	mux.Handle("GET /products/{productId}", manager.With(http.HandlerFunc(handlers.GetProductByID), middleware.Logger))
 
 	fmt.Println("Server running on :8080")
 
