@@ -11,6 +11,9 @@ import (
 
 func Serve() {
 	mux := http.NewServeMux()
+	manager := middleware.NewManager()
+
+	mux.Handle("GET /rahim", manager.With(middleware.Logger)(http.HandlerFunc(handlers.Test)))
 
 	mux.Handle("GET / route", middleware.Logger(http.HandlerFunc(handlers.Test)))
 
