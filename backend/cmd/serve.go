@@ -17,7 +17,9 @@ func Serve() {
 	// 	middleware.CorsWithPreflight, middleware.Logger,
 	// }m
 	manager.Use(
-		middleware.CorsWithPreflight, middleware.Logger,
+		middleware.Cors,
+		middleware.Preflight,
+		middleware.Logger,
 	)
 
 	wrappedMux := manager.WrapMux(mux)
