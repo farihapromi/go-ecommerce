@@ -18,7 +18,8 @@ func Serve() {
 
 	// Use cors-enabled globalRouter
 	// globalRouter := middleware.CorsWithPreflight(mux)
-	err := http.ListenAndServe(":8080", mux)
+	wrappedMux := manager.With(mux)
+	err := http.ListenAndServe(":8080", wrappedMux)
 	if err != nil {
 		fmt.Println("Error starting the server", err)
 	}
