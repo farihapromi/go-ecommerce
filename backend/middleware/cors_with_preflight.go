@@ -2,7 +2,7 @@ package middleware
 
 import "net/http"
 
-func CorsWithPreflight(mux *http.ServeMux) http.Handler {
+func CorsWithPreflight(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Always add CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000") // safer than *
@@ -16,6 +16,6 @@ func CorsWithPreflight(mux *http.ServeMux) http.Handler {
 		}
 
 		// Pass down to the actual mux
-		mux.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 	})
 }
