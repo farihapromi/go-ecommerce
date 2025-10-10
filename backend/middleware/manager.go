@@ -18,7 +18,7 @@ func (mngr *Manager) Use(middlewares ...Middleware) {
 	mngr.globalMiddlewares = append(mngr.globalMiddlewares, middlewares...)
 
 }
-func (mngr *Manager) With(handler http.Handler, middlewares ...Middleware) http.Handler {
+func (mngr *Manager) WrapMux(handler http.Handler, middlewares ...Middleware) http.Handler {
 
 	h := handler
 	//middlewares =[hudai,logger] [0,1]
@@ -28,6 +28,7 @@ func (mngr *Manager) With(handler http.Handler, middlewares ...Middleware) http.
 	// 	n = middleware(n)
 
 	// }
+	//h=corsWithPrefligh(logger(Mux))
 	for _, middleware := range middlewares {
 		h = middleware(h)
 
