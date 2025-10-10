@@ -1,8 +1,8 @@
-package global_router
+package middleware
 
 import "net/http"
 
-func GlobalRouter(mux *http.ServeMux) http.Handler {
+func CorsWithPreflight(mux *http.ServeMux) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Always add CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000") // safer than *
