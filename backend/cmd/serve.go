@@ -8,9 +8,10 @@ import (
 )
 
 func Serve() {
-	mux := http.NewServeMux()
+
 	manager := middleware.NewManager()
 	manager.Use(middleware.Logger, middleware.CorsWithPreflight)
+	mux := http.NewServeMux()
 	initRoutes(mux, manager)
 
 	fmt.Println("Server running on :8080")

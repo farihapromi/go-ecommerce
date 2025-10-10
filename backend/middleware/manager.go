@@ -18,9 +18,9 @@ func (mngr *Manager) Use(middlewares ...Middleware) {
 	mngr.globalMiddlewares = append(mngr.globalMiddlewares, middlewares...)
 
 }
-func (mngr *Manager) With(next http.Handler, middlewares ...Middleware) http.Handler {
+func (mngr *Manager) With(handler http.Handler, middlewares ...Middleware) http.Handler {
 
-	n := next
+	h := handler
 	//middlewares =[hudai,logger] [0,1]
 	// middleware.Logger http.HandlerFunc(handlers.GetProducts)))
 	// for i := len(middlewares) - 1; i >= 0; i-- {
@@ -29,13 +29,13 @@ func (mngr *Manager) With(next http.Handler, middlewares ...Middleware) http.Han
 
 	// }
 	for _, middleware := range middlewares {
-		n = middleware(n)
+		h = middleware(h)
 
 	}
 	for _, globalMiddleware := range mngr.globalMiddlewares {
-		n = globalMiddleware(n)
+		h = globalMiddleware(h)
 	}
 
-	return n
+	return h
 
 }
