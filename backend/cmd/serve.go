@@ -25,10 +25,9 @@ func Serve() {
 	wrappedMux := manager.WrapMux(mux)
 
 	addr := ":" + strconv.Itoa(cnf.HttpPort) //type casting .int to asci
-	fmt.Println("Server running on ", addr)
+	fmt.Println("Server running on port ", addr)
 
-	err := http.ListenAndServe(":8080",
-		wrappedMux)
+	err := http.ListenAndServe(addr, wrappedMux)
 	if err != nil {
 		fmt.Println("Error starting the server", err)
 		os.Exit(1)
