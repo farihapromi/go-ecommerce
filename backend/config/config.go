@@ -11,6 +11,7 @@ type Config struct {
 	HttpPort    int
 }
 
+// load configuration variable from env
 func LoadConfig() {
 	version := os.Getenv("VERSION")
 	if version == "" {
@@ -19,7 +20,14 @@ func LoadConfig() {
 	}
 	serviceName := os.Getenv("SERVICE_NAME")
 	if serviceName == "" {
-		fmt.Println("vSevice name is required")
+		fmt.Println("Sevice name is required")
+		os.Exit(1)
+
+	}
+	httpPort := os.Getenv("HTTP_PORT")
+	if httpPort == "" {
+		fmt.Println("Http port is required")
+		os.Exit(1)
 
 	}
 
