@@ -12,9 +12,12 @@ type Product struct {
 	ImgUrl      string  `json:"imgUrl"`
 }
 
-func Store(p Product) {
+func Store(p Product) Product { //create product
+	p.ID = len(productList) + 1
 	//prodcut list er objext
 	productList = append(productList, p)
+	//jokhn create hoi return dite hoi
+	return p
 }
 func List() []Product {
 	return productList
