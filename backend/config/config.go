@@ -15,7 +15,7 @@ var configurations Config
 type Config struct {
 	Version     string
 	ServiceName string
-	HttpPort    int64
+	HttpPort    int
 }
 
 //keep the variable lowercae so that other package can not access this
@@ -25,7 +25,8 @@ type Config struct {
 func loadConfig() {
 	err := godotenv.Load()
 	if err != nil {
-		fmt.Println("Failed to load env files")
+		fmt.Println("Failed to load env variables", err)
+		os.Exit(1)
 	}
 	version := os.Getenv("VERSION")
 	if version == "" {
@@ -52,7 +53,7 @@ func loadConfig() {
 	configurations = Config{
 		Version:     version,
 		ServiceName: serviceName,
-		HttpPort:    port,
+		HttpPort:    int(port),
 	}
 
 }
