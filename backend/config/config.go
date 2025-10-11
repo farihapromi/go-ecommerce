@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/lpernett/godotenv"
 )
 
 // data segment a thalbe  const
@@ -21,6 +23,10 @@ type Config struct {
 
 // load configuration variable from env
 func loadConfig() {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Failed to load env files")
+	}
 	version := os.Getenv("VERSION")
 	if version == "" {
 		fmt.Println("version is required")
