@@ -6,14 +6,21 @@ import (
 	"strconv"
 )
 
+// data segment a thalbe  const
+// code segment a thakbe var
+var configurations Config
+
 type Config struct {
 	Version     string
 	ServiceName string
 	HttpPort    int64
 }
 
+//keep the variable lowercae so that other package can not access this
+//capital hole public
+
 // load configuration variable from env
-func LoadConfig() {
+func loadConfig() {
 	version := os.Getenv("VERSION")
 	if version == "" {
 		fmt.Println("version is required")
@@ -36,10 +43,14 @@ func LoadConfig() {
 		fmt.Println("port must be integar:", err)
 		os.Exit(1)
 	}
-	cnf := Config{
+	configurations = Config{
 		Version:     version,
 		ServiceName: serviceName,
 		HttpPort:    port,
 	}
 
+}
+func GetConfig() Config {
+	loadConfig()
+	return configurations
 }
