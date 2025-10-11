@@ -21,6 +21,6 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	// }
 	// encoder := json.NewEncoder(w)
 	// encoder.Encode(productList)
-	util.SendData(w, database.ProductList, 200)
+	util.SendData(w, database.List(), 200)
 
 }
