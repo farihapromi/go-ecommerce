@@ -3,12 +3,13 @@ package config
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
 
 type Config struct {
 	Version     string
 	ServiceName string
-	HttpPort    int
+	HttpPort    int64
 }
 
 // load configuration variable from env
@@ -29,6 +30,16 @@ func LoadConfig() {
 		fmt.Println("Http port is required")
 		os.Exit(1)
 
+	}
+	port, err := strconv.ParseInt(httpPort, 10, 64) //decimasl base 10, 64 base
+	if err != nil {
+		fmt.Println("port must be integar:", err)
+		os.Exit(1)
+	}
+	cnf := Config{
+		Version:     version,
+		ServiceName: serviceName,
+		HttpPort:    port,
 	}
 
 }
