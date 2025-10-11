@@ -1,6 +1,6 @@
 package database
 
-var ProductList []Product
+var productList []Product
 
 type Product struct {
 	/*Struct tags are special metadata you can attach to struct fields.
@@ -10,6 +10,41 @@ type Product struct {
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
 	ImgUrl      string  `json:"imgUrl"`
+}
+
+func Store(p Product) {
+	//prodcut list er objext
+	productList = append(productList, p)
+}
+func List() []Product {
+	return productList
+}
+func Get(productID int) *Product {
+	for _, product := range productList {
+		if product.ID == productID {
+			return &product
+		}
+
+	}
+	return nil
+}
+func Update(product Product) {
+	for idx, p := range productList {
+		if p.ID == product.ID {
+			productList[idx] = product
+		}
+	}
+}
+func Delete(productID int) {
+	var tempList []Product
+
+	for idx, p := range productList {
+		if p.ID != productID {
+			tempList[idx] = p
+		}
+	}
+	productList = tempList
+
 }
 
 func init() {
@@ -53,13 +88,13 @@ func init() {
 		ImgUrl:      "https://upload.wikimedia.org/wikipedia/commons/c/cb/Pineapple_and_cross_section.jpg",
 	}
 	// Append all product.Products
-	ProductList = append(ProductList, prd1)
-	ProductList = append(ProductList, prd2)
-	ProductList = append(ProductList, prd3)
-	ProductList = append(ProductList, prd4)
-	ProductList = append(ProductList, prd5)
+	productList = append(productList, prd1)
+	productList = append(productList, prd2)
+	productList = append(productList, prd3)
+	productList = append(productList, prd4)
+	productList = append(productList, prd5)
 
-	// product.ProductList = append(productList, prd1, prd2, prd3, prd4, prd5, prd6)
+	// product.productList = append(productList, prd1, prd2, prd3, prd4, prd5, prd6)
 
 	// fmt.Println(productList)
 }
