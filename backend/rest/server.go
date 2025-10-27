@@ -13,13 +13,14 @@ func Start(cnf config.Config) {
 	manager := middleware.NewManager()
 
 	manager.Use(
-		middleware.Cors,
 		middleware.Preflight,
+		middleware.Cors,
+
 		middleware.Logger,
 	)
 	mux := http.NewServeMux()
-	initRoutes(mux, manager)
 	wrappedMux := manager.WrapMux(mux)
+	initRoutes(mux, manager)
 
 	addr := ":" + strconv.Itoa(cnf.HttpPort) //type casting .int to asci
 	fmt.Println("Server running on port ", addr)
