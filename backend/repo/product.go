@@ -11,11 +11,11 @@ type Product struct {
 }
 
 type ProductRepo interface {
-	Create()
-	Get()
-	List()
-	Delete()
-	Update()
+	Create(p Product) (*Product, error)
+	Get(productID int) (*Product, error)
+	List() []*Product
+	Delete(productID int) error
+	Update(p Product) (*Product, error)
 }
 type productRepo struct {
 	productList []Product
@@ -27,19 +27,23 @@ func NewProductRepo() ProductRepo {
 	return repo
 
 }
-func (r *productRepo) Create() {
+func (r *productRepo) Create(p Product) (*Product, error) {
+	p.ID = len(r.productList) + 1
+	r.productList = append(r.productList, p)
+	return &p, nil
 
 }
-func (r *productRepo) Get() {
+func (r *productRepo) Get(productID int) (*Product, error) {
 
 }
-func (r *productRepo) List() {
+
+func (r *productRepo) List() []*Product {
 
 }
-func (r *productRepo) Delete() {
+func (r *productRepo) Delete(productID int) error {
 
 }
-func (r *productRepo) Update() {
+func (r *productRepo) Update(p Product) (*Product, error) {
 
 }
 
