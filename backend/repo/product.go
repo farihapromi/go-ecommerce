@@ -34,6 +34,13 @@ func (r *productRepo) Create(p Product) (*Product, error) {
 
 }
 func (r *productRepo) Get(productID int) (*Product, error) {
+	for _, product := range r.productList {
+		if product.ID == productID {
+			return &product, nil
+		}
+
+	}
+	return nil, nil
 
 }
 
