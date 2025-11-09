@@ -13,12 +13,12 @@ type Product struct {
 type ProductRepo interface {
 	Create(p Product) (*Product, error)
 	Get(productID int) (*Product, error)
-	List() []*Product
+	List() ([]*Product, error)
 	Delete(productID int) error
 	Update(p Product) (*Product, error)
 }
 type productRepo struct {
-	productList []Product
+	productList []*Product
 }
 
 func NewProductRepo() ProductRepo {
@@ -29,14 +29,14 @@ func NewProductRepo() ProductRepo {
 }
 func (r *productRepo) Create(p Product) (*Product, error) {
 	p.ID = len(r.productList) + 1
-	r.productList = append(r.productList, p)
+	r.productList = append(r.productList, &p)
 	return &p, nil
 
 }
 func (r *productRepo) Get(productID int) (*Product, error) {
 	for _, product := range r.productList {
 		if product.ID == productID {
-			return &product, nil
+			return product, nil
 		}
 
 	}
@@ -44,18 +44,34 @@ func (r *productRepo) Get(productID int) (*Product, error) {
 
 }
 
-func (r *productRepo) List() []*Product {
+func (r *productRepo) List() ([]*Product, error) {
+	return r.productList, nil
 
 }
 func (r *productRepo) Delete(productID int) error {
+	var tempList []*Product
+
+	for _, p := range r.productList {
+		if p.ID != productID {
+			tempList = append(tempList, p)
+		}
+	}
+	r.productList = tempList
+	return nil
 
 }
-func (r *productRepo) Update(p Product) (*Product, error) {
+func (r *productRepo) Update(product Product) (*Product, error) {
+	for idx, p := range r.productList {
+		if p.ID == product.ID {
+			r.productList[idx] = &product
+		}
+	}
+	return &product, nil
 
 }
 
 func generateInitialProducts(r *productRepo) {
-	prd1 := Product{
+	prd1 := &Product{
 		ID:          1,
 		Title:       "Orange",
 		Description: "Orange is sweet and juicy",
@@ -63,7 +79,7 @@ func generateInitialProducts(r *productRepo) {
 		ImgUrl:      "https://images.othoba.com/images/thumbs/0040450_orange-1-kg.jpeg",
 	}
 
-	prd2 := Product{
+	prd2 := &Product{
 		ID:          2,
 		Title:       "Mango",
 		Description: "Mango is juicy and delicious",
@@ -71,7 +87,7 @@ func generateInitialProducts(r *productRepo) {
 		ImgUrl:      "https://dookan.com/cdn/shop/files/Dookan_Kesar_Mangoes_82bf0570-50bf-4f04-97b4-b1b415ebc733.png?v=1724714757&width=823",
 	}
 
-	prd3 := Product{
+	prd3 := &Product{
 		ID:          3,
 		Title:       "Apple",
 		Description: "Red apple, crispy and sweet",
@@ -79,7 +95,7 @@ func generateInitialProducts(r *productRepo) {
 		ImgUrl:      "https://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg",
 	}
 
-	prd4 := Product{
+	prd4 := &Product{
 		ID:          4,
 		Title:       "Banana",
 		Description: "Fresh yellow bananas, rich in potassium",
@@ -87,7 +103,7 @@ func generateInitialProducts(r *productRepo) {
 		ImgUrl:      "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg",
 	}
 
-	prd5 := Product{
+	prd5 := &Product{
 		ID:          5,
 		Title:       "Pineapple",
 		Description: "Fresh pineapple, tropical and juicy",
