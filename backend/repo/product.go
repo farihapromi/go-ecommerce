@@ -20,3 +20,20 @@ type ProductRepo interface {
 type productRepo struct {
 	productList []Product
 }
+
+func NewProductRepo() productRepo {
+	return productRepo{}
+
+}
+func (r productRepo) Create() {
+
+}
+func (r productRepo) Get() {
+
+}
+func (r productRepo) Delete() {
+
+}
+func (r productRepo) Update() {
+
+}
